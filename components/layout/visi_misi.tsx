@@ -5,7 +5,7 @@ export default function VisiMisiSection() {
       className="relative overflow-hidden bg-primary py-24"
     >
       <div className="absolute inset-0 bg-[url('/image/Image_BG.JPG')] bg-cover bg-center opacity-20" />
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/90 to-primary/95" />
+      <div className="absolute inset-0 bg-linear-to-b from-primary/90 via-primary/90 to-primary/95" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative">
