@@ -18,19 +18,21 @@ export default function OrganisasiSection() {
           description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
         ></Card>
       </div>
-      <div className="container mx-auto px-4 grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
-        <Card
-          title="Wakil Ketua Umum"
-          imageSrc="\image\Raja_Hidimba.jpg"
-          imageAlt="Struktur Organisasi"
-          description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-        ></Card>
-        <Card
-          title="Sekretaris Umum"
-          imageSrc="\image\Raja_Hidimba.jpg"
-          imageAlt="Struktur Organisasi"
-          description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-        ></Card>
+      <div className="w-full flex justify-center mt-8">
+        <div className="max-w-3xl px-4 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <Card
+            title="Wakil Ketua Umum"
+            imageSrc="\image\Raja_Hidimba.jpg"
+            imageAlt="Struktur Organisasi"
+            description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
+          ></Card>
+          <Card
+            title="Sekretaris Umum"
+            imageSrc="\image\Raja_Hidimba.jpg"
+            imageAlt="Struktur Organisasi"
+            description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
+          ></Card>
+        </div>
       </div>
       <div className="flex justify-center mt-8">
         <Button

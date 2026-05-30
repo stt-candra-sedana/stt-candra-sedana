@@ -25,7 +25,7 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none";
+    "inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold font-poppins transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none";
 
   const variantStyles =
     variant === "secondary"

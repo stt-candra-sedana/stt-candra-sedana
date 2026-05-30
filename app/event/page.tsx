@@ -1,7 +1,70 @@
+"use client";
+
+import { useState } from "react";
 import Button from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
+import Card from "@/components/ui/card";
+import SponsorCard from "@/components/ui/sponsor";
+import Footer from "@/components/layout/footer";
+
+const eventList = [
+  {
+    title: "Pentas Seni Budaya",
+    description:
+      "Pertunjukan tari dan musik tradisional yang memperkenalkan adat istiadat lokal.",
+    imageSrc: "/image/Ogoh_Ogoh.jpg",
+    href: "#event",
+  },
+  {
+    title: "Workshop Kreatif",
+    description:
+      "Belajar membuat kerajinan tradisional dengan teknik modern dan bahan lokal.",
+    imageSrc: "/image/Raja_Hidimba.jpg",
+    href: "#event",
+  },
+  {
+    title: "Pentas Musik",
+    description:
+      "Pertunjukan musik live yang menampilkan komposer komunitas dan kolaborasi seni.",
+    imageSrc: "/image/Image_BG.jpg",
+    href: "#event",
+  },
+  {
+    title: "Pentas Gambelan",
+    description:
+      "Pertunjukan musik live yang menampilkan komposer komunitas dan kolaborasi seni.",
+    imageSrc: "/image/Image_BG.jpg",
+    href: "#event",
+  },
+];
+
+const sponsorList = [
+  {
+    name: "Sponsor 1",
+    logoSrc: "/logo/logo1.jpg",
+    href: "https://sponsor1.com",
+  },
+  {
+    name: "Sponsor 2",
+    logoSrc: "/logo/logo2.jpg",
+    href: "https://sponsor2.com",
+  },
+  {
+    name: "Sponsor 3",
+    logoSrc: "/logo/logo3.jpg",
+    href: "https://sponsor3.com",
+  },
+];
 
 export default function AboutSection() {
+  const [visibleCount, setVisibleCount] = useState(3);
+  const visibleEvents = eventList.slice(0, visibleCount);
+  const hasMore = visibleCount < eventList.length;
+
+  const handleLoadMore = () => {
+    setVisibleCount((current) => Math.min(current + 3, eventList.length));
+  };
+
   return (
     <main>
       <Navbar />
@@ -40,6 +103,78 @@ export default function AboutSection() {
           </div>
         </div>
       </section>
+      <section id="event" className="py-16 bg-primary">
+        <div className="flex flex-col px-4 ">
+          <div className="max-w-3xl mx-auto px-4">
+            <h1 className="text-3xl font-bold text-center mb-8">
+              <span className="text-accent">Event </span>
+              <span className="text-secondary">Kami</span>
+            </h1>
+          </div>
+
+          <div className="max-w-7xl mx-auto grid gap-6 px-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleEvents.map((event) => (
+              <Card
+                key={event.title}
+                title={event.title}
+                description={event.description}
+                imageSrc={event.imageSrc}
+                className="h-full"
+              ></Card>
+            ))}
+          </div>
+
+          {hasMore ? (
+            <div className="flex justify-center mt-8">
+              <Button variant="primary" onClick={handleLoadMore}>
+                Lainnya
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      </section>
+      <section id="sponsor" className="py-16 bg-primary overflow-hidden">
+        <style>{`
+          @keyframes scroll-left {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-100%);
+            }
+          }
+          .sponsor-carousel {
+            animation: scroll-left 30s linear infinite;
+          }
+        `}</style>
+
+        <div className="flex flex-col px-4">
+          <div className="max-w-3xl mx-auto px-4">
+            <h1 className="text-3xl font-bold text-center mb-8">
+              <span className="text-accent">Sponsor </span>
+              <span className="text-secondary">Kami</span>
+            </h1>
+          </div>
+
+          <div className="w-full overflow-hidden">
+            <div className="sponsor-carousel flex gap-6 px-4">
+              {[...sponsorList, ...sponsorList].map((sponsor, index) => (
+                <div
+                  key={`${sponsor.name}-${index}`}
+                  className="shrink-0 w-56"
+                >
+                  <SponsorCard
+                    name={sponsor.name}
+                    logoSrc={sponsor.logoSrc}
+                    href={sponsor.href}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <Footer />
     </main>
   );
 }
