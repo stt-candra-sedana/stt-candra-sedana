@@ -21,17 +21,17 @@ export default function Footer() {
             </h2>
             <ul className="mt-5 space-y-3 text-sm text-secondary">
               <li>
-                <Link href="#about" className="transition hover:text-accent">
+                <Link href="/about" className="transition hover:text-accent">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="#home" className="transition hover:text-accent">
+                <Link href="/" className="transition hover:text-accent">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="#event" className="transition hover:text-accent">
+                <Link href="/event" className="transition hover:text-accent">
                   Event
                 </Link>
               </li>

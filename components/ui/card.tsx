@@ -19,7 +19,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`rounded-3xl border border-accent bg-secondary shadow-xl shadow-black/10 overflow-hidden ${className}`}
+      className={`flex flex-col rounded-3xl border border-accent bg-secondary shadow-xl shadow-black/10 overflow-hidden ${className}`}
     >
       {imageSrc ? (
         <div className="relative h-56 w-full overflow-hidden bg-slate-800">
@@ -31,11 +31,14 @@ export default function Card({
         </div>
       ) : null}
 
-      <div className="p-6">
-        <h2 className="text-2xl font-bold text-accent mb-2">{title}</h2>
-        {description ? (
-          <p className="text-sm text-primary mb-4">{description}</p>
-        ) : null}
+      <div className="p-6 flex-1 flex flex-col justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-accent mb-2">{title}</h2>
+          {description ? (
+            <p className="text-sm text-primary mb-4">{description}</p>
+          ) : null}
+        </div>
+
         {children}
       </div>
     </div>

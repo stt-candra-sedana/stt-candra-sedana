@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Button from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
 import Card from "@/components/ui/card";
@@ -64,6 +64,76 @@ export default function AboutSection() {
   const handleLoadMore = () => {
     setVisibleCount((current) => Math.min(current + 3, eventList.length));
   };
+
+  const sponsorRef = useRef<HTMLDivElement | null>(null);
+  const [animationCss, setAnimationCss] = useState("");
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const posRef = useRef(0);
+
+  useEffect(() => {
+    const track = sponsorRef.current;
+    const wrapper = wrapperRef.current;
+    if (!track || !wrapper) return;
+
+    // ensure there are enough items to fill twice the wrapper width (buffer)
+    const ensureFill = () => {
+      const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
+      while (track.scrollWidth < wrapper.clientWidth * 2) {
+        // clone children in-order to append
+        const children = Array.from(track.children) as HTMLElement[];
+        for (const ch of children) {
+          const clone = ch.cloneNode(true) as HTMLElement;
+          track.appendChild(clone);
+          if (track.scrollWidth >= wrapper.clientWidth * 2) break;
+        }
+        // prevent infinite loop
+        if (track.children.length > 200) break;
+      }
+    };
+
+    ensureFill();
+
+    const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
+    const speed = 80; // px per second, adjust for faster/slower
+
+    let last = performance.now();
+
+    const step = (now: number) => {
+      const dt = (now - last) / 1000;
+      last = now;
+      let pos = posRef.current - speed * dt;
+
+      // measure first child width including gap
+      const first = track.children[0] as HTMLElement | undefined;
+      if (first) {
+        const firstWidth = first.getBoundingClientRect().width + gap;
+        // when first has fully left, move it to end and adjust pos
+        while (pos <= -firstWidth) {
+          // move first element to end
+          track.appendChild(first);
+          pos += firstWidth;
+          // update first reference for next loop
+          const newFirst = track.children[0] as HTMLElement | undefined;
+          if (!newFirst) break;
+        }
+      }
+
+      posRef.current = pos;
+      track.style.transform = `translateX(${pos}px)`;
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    rafRef.current = requestAnimationFrame(step);
+
+    const onResize = () => ensureFill();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
 
   return (
     <main>
@@ -134,19 +204,8 @@ export default function AboutSection() {
         </div>
       </section>
       <section id="sponsor" className="py-16 bg-primary overflow-hidden">
-        <style>{`
-          @keyframes scroll-left {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-100%);
-            }
-          }
-          .sponsor-carousel {
-            animation: scroll-left 30s linear infinite;
-          }
-        `}</style>
+        {/* dynamic CSS inserted after measuring track width to ensure seamless loop */}
+        <style>{animationCss}</style>
 
         <div className="flex flex-col px-4">
           <div className="max-w-3xl mx-auto px-4">
@@ -156,13 +215,10 @@ export default function AboutSection() {
             </h1>
           </div>
 
-          <div className="w-full overflow-hidden">
-            <div className="sponsor-carousel flex gap-6 px-4">
-              {[...sponsorList, ...sponsorList].map((sponsor, index) => (
-                <div
-                  key={`${sponsor.name}-${index}`}
-                  className="shrink-0 w-56"
-                >
+          <div className="w-full overflow-hidden" ref={wrapperRef}>
+            <div className="sponsor-carousel flex gap-6 px-4" ref={sponsorRef}>
+              {sponsorList.map((sponsor, index) => (
+                <div key={`${sponsor.name}-${index}`} className="shrink-0 w-56">
                   <SponsorCard
                     name={sponsor.name}
                     logoSrc={sponsor.logoSrc}

@@ -28,6 +28,9 @@ h4,
 h5,
 h6 {
   font-family: var(--font-poppins), sans-serif;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 a {

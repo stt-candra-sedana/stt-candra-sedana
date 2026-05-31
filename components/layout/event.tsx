@@ -28,35 +28,30 @@ const eventList = [
 
 export function EventSection() {
   return (
-    <section id="event" className="py-16 bg-primary">
-      <div className="flex flex-col px-4 ">
-        <div className="max-w-3xl mx-auto px-4">
+    <section id="event" className="py-16 px-4 sm:px-6 lg:px-8 bg-primary">
+      <div className="mx-auto flex max-w-7xl flex-col gap-10">
+        <div>
           <h1 className="text-3xl font-bold text-center mb-8">
             <span className="text-accent">Event </span>
             <span className="text-secondary">Kami</span>
           </h1>
         </div>
 
-        <div className="-mx-4 flex gap-6 overflow-x-auto px-4 pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600/40">
+        <div className="flex gap-6 overflow-x-auto px-2 pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-600/40 snap-x snap-mandatory">
           {eventList.map((event) => (
-            <div key={event.title} className="min-w-[12.5px] snap-start">
+            <div key={event.title} className="min-w-[20rem] snap-start">
               <Card
                 title={event.title}
                 description={event.description}
                 imageSrc={event.imageSrc}
                 className="h-full"
-              >
-              </Card>
+              />
             </div>
           ))}
         </div>
-        <div className="flex justify-center ">
-         <Button
-            variant="primary"
-            target="_blank"
-            rel="noreferrer noopener"
-            href="https://fonts.google.com/specimen/EB+Garamond"
-          >
+
+        <div className="flex justify-center">
+          <Button variant="primary" href="/event">
             Selengkapnya...
           </Button>
         </div>

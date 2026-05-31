@@ -84,43 +84,66 @@ export default function AboutSection() {
             description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
           ></Card>
         </div>
-        <div className="container mx-auto px-4 grid gap-8 md:grid-cols-2 lg:grid-cols-3 mt-8">
-          <Card
-            title="Wakil Ketua Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-          ></Card>
-          <Card
-            title="Sekretaris Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-          ></Card>
-          <Card
-            title="Wakil Ketua Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-          ></Card>
-          <Card
-            title="Sekretaris Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-          ></Card>
-          <Card
-            title="Wakil Ketua Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-          ></Card>
-          <Card
-            title="Sekretaris Umum"
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-          ></Card>
+        <div className="container mx-auto px-4 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Wakil Ketua Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Sekretaris Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Wakil Ketua Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Sekretaris Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Wakil Ketua Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto">
+            <Card
+              className="h-full"
+              title="Sekretaris Umum"
+              imageSrc="/image/Raja_Hidimba.jpg"
+              imageAlt="Struktur Organisasi"
+              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
+            />
+          </div>
         </div>
       </section>
       <Footer />
