@@ -9,27 +9,27 @@ export default function VisiMisiSection() {
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative">
-          <div className="grid gap-10 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
-            <div className="rounded-4xl border border-primary/10 bg-primary/10 p-10 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.7)] backdrop-blur-sm">
-              <h3 className="mb-5 text-2xl font-semibold uppercase tracking-[0.2em] text-secondary">
+          <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
+            <div className="rounded-4xl border border-primary/10 bg-primary/10 p-8 sm:p-10 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.7)] backdrop-blur-sm">
+              <h3 className="mb-5 text-2xl sm:text-3xl font-semibold uppercase tracking-[0.2em] text-secondary">
                 Visi
               </h3>
-              <p className="text-base leading-8 text-secondary">
+              <p className="text-base sm:text-lg leading-7 sm:leading-8 text-secondary">
                 Menjadi komunitas seni dan budaya yang menjaga tradisi lokal
                 sambil membangun kreativitas generasi muda untuk berkontribusi
                 pada masyarakat dan pariwisata Ubud.
               </p>
             </div>
 
-            <div className="relative mx-auto flex h-32 w-32 items-center justify-center rounded-full border border-amber-400 bg-primary/95 text-4xl font-bold text-white shadow-xl shadow-amber-500/20">
+            <div className="relative mx-auto flex h-24 w-24 sm:h-32 sm:w-32 items-center justify-center rounded-full border border-amber-400 bg-primary/95 text-3xl sm:text-4xl font-bold text-white shadow-xl shadow-amber-500/20">
               &amp;
             </div>
 
-            <div className="rounded-4xl border border-primary/10 bg-primary/10 p-10 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.7)] backdrop-blur-sm">
-              <h3 className="mb-5 text-2xl font-semibold uppercase tracking-[0.2em] text-secondary">
+            <div className="rounded-4xl border border-primary/10 bg-primary/10 p-8 sm:p-10 shadow-[0_40px_120px_-50px_rgba(0,0,0,0.7)] backdrop-blur-sm">
+              <h3 className="mb-5 text-2xl sm:text-3xl font-semibold uppercase tracking-[0.2em] text-secondary">
                 Misi
               </h3>
-              <p className="text-base leading-8 text-secondary">
+              <p className="text-base sm:text-lg leading-7 sm:leading-8 text-secondary">
                 Menyelenggarakan kegiatan budaya dan edukasi, memperkuat
                 persaudaraan antar anggota, serta memperkenalkan warisan adat
                 melalui dokumentasi dan partisipasi publik.

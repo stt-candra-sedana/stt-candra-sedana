@@ -45,27 +45,32 @@ export default function AboutSection() {
           </div>
         </div>
       </section>
-      <section className="py-16 flex">
-        <div className="flex-col items-center justify-center max-w-3xl mx-auto px-4">
-          <Image
-            className="rounded-lg mb-8"
-            src="/image/logo_STT.jpg"
-            alt="Tentang Kami"
-            width={300}
-            height={300}
-          />
-        </div>
-        <div className="flex-col items-center justify-center max-w-lg mx-auto px-4">
-          <h2 className="text-lg text-accent font-bold text-center mb-8">
-            "Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam Menjaga
-            Tradisi serta Mempererat Persaudaraan."
-          </h2>
-          <p className="text-md text-justify">
-            Sebagai generasi penerus, STT Candra Sedana berkomitmen untuk
-            menjadi motor penggerak kegiatan sosial, budaya, dan inovasi di
-            lingkungan masyarakat, berlandaskan nilai Tat Twam Asi dan semangat
-            gotong royong
-          </p>
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:items-center">
+          <div className="w-full lg:w-1/2">
+            <div className="mx-auto w-full max-w-xl overflow-hidden rounded-3xl shadow-[0_30px_80px_-40px_rgba(0,0,0,0.6)] sm:max-w-2xl">
+              <Image
+                className="h-full w-full object-cover"
+                src="/image/logo_STT.jpg"
+                alt="Tentang Kami"
+                width={900}
+                height={900}
+              />
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center lg:text-left text-accent mb-6">
+              "Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam Menjaga
+              Tradisi serta Mempererat Persaudaraan."
+            </h2>
+            <p className="text-base sm:text-lg leading-8 text-justify text-secondary">
+              Sebagai generasi penerus, STT Candra Sedana berkomitmen untuk
+              menjadi motor penggerak kegiatan sosial, budaya, dan inovasi di
+              lingkungan masyarakat, berlandaskan nilai Tat Twam Asi dan
+              semangat gotong royong.
+            </p>
+          </div>
         </div>
       </section>
       <VisiMisiSection />
