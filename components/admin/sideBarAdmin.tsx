@@ -8,7 +8,6 @@ const menus = [
   { label: "Visi & Misi", href: "/admin/visi-misi" },
   { label: "Struktur Organisasi", href: "/admin/pengurus" },
   { label: "Gallery & Sponsor", href: "/admin/galeri" },
-  { label: "Jenis Proker", href: "/admin/jenis-proker" },
 ];
 
 export default function SideBarAdmin() {
@@ -17,12 +16,14 @@ export default function SideBarAdmin() {
   return (
     <div
       className="w-64 h-screen p-6 flex flex-col gap-6"
-      style={{ background: "#0d0d0d", borderRight: "1px solid #2a2a2a" }}>
+      style={{ background: "#0d0d0d", borderRight: "1px solid #2a2a2a" }}
+    >
       {/* Logo */}
       <div>
         <p
           className="text-xs uppercase tracking-[0.3em] mb-1"
-          style={{ color: "var(--accent)" }}>
+          style={{ color: "var(--accent)" }}
+        >
           Admin Panel
         </p>
         <h2 className="text-xl font-bold" style={{ color: "var(--secondary)" }}>
@@ -47,7 +48,8 @@ export default function SideBarAdmin() {
               style={{
                 background: isActive ? "var(--accent)" : "transparent",
                 color: isActive ? "var(--primary)" : "var(--secondary)",
-              }}>
+              }}
+            >
               {menu.label}
             </Link>
           );

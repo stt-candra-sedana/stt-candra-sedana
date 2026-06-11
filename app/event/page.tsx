@@ -3,41 +3,24 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
-import Card from "@/components/ui/card";
+import EventCard from "@/components/ui/eventCard";
 import SponsorCard from "@/components/ui/sponsor";
 import Footer from "@/components/layout/footer";
+// Pastikan file inisialisasi pusat ini sudah kamu buat di folder lib
+import { supabase } from "@/lib/supabase";
 
-const eventList = [
-  {
-    title: "Pentas Seni Budaya",
-    description:
-      "Pertunjukan tari dan musik tradisional yang memperkenalkan adat istiadat lokal.",
-    imageSrc: "/image/Ogoh_Ogoh.jpg",
-    href: "#event",
-  },
-  {
-    title: "Workshop Kreatif",
-    description:
-      "Belajar membuat kerajinan tradisional dengan teknik modern dan bahan lokal.",
-    imageSrc: "/image/Raja_Hidimba.jpg",
-    href: "#event",
-  },
-  {
-    title: "Pentas Musik",
-    description:
-      "Pertunjukan musik live yang menampilkan komposer komunitas dan kolaborasi seni.",
-    imageSrc: "/image/Image_BG.jpg",
-    href: "#event",
-  },
-  {
-    title: "Pentas Gambelan",
-    description:
-      "Pertunjukan musik live yang menampilkan komposer komunitas dan kolaborasi seni.",
-    imageSrc: "/image/Image_BG.jpg",
-    href: "#event",
-  },
-];
+// 1. Definisikan tipe data TypeScript sesuai dengan skema tabel di Supabase
+interface SupabaseEvent {
+  event_id: number;
+  nama_event: string;
+  event_date: string;
+  deskripsi_acara: string;
+  image_url: string | null;
+  url_registrasi: string | null;
+  jenis_proker_id: number;
+}
 
+// Data sponsor tetap kita pertahankan secara lokal sementara waktu
 const sponsorList = [
   {
     name: "Sponsor 1",
@@ -57,14 +40,53 @@ const sponsorList = [
 ];
 
 export default function AboutSection() {
-  const [visibleCount, setVisibleCount] = useState(3);
-  const visibleEvents = eventList.slice(0, visibleCount);
-  const hasMore = visibleCount < eventList.length;
+  // State untuk menyimpan list data event dari database
+  const [events, setEvents] = useState<SupabaseEvent[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // State untuk fitur pagination / load more
+  const [visibleCount, setVisibleCount] = useState<number>(3);
+
+  // Mengambil sebagian data sesuai batas count untuk ditampilkan
+  const visibleEvents = events.slice(0, visibleCount);
+  const hasMore = visibleCount < events.length;
 
   const handleLoadMore = () => {
-    setVisibleCount((current) => Math.min(current + 3, eventList.length));
+    setVisibleCount((current) => Math.min(current + 3, events.length));
   };
 
+  // 2. Mengambil data dari Supabase menggunakan React useEffect Hook
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        setLoading(true); // Pastikan loading dimulai
+
+        const { data, error } = await supabase
+          .from("events") // ⚠️ Pastikan nama tabel di Supabase persis huruf kecil semua
+          .select("*")
+          .order("event_date", { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          setEvents(data);
+        }
+      } catch (error) {
+        // Jika terjadi error koneksi atau RLS, error akan tercatat di Console browser
+        console.error("Gagal mengambil data dari Supabase:", error);
+      } finally {
+        // Blok finally AKAN SELALU JALAN, baik sukses maupun error.
+        // Ini menjamin tulisan "Memuat Event..." akan hilang dan tidak stuck!
+        setLoading(false);
+      }
+    }
+
+    fetchEvents();
+  }, []);
+
+  // Konfigurasi animasi komidi putar (Sponsor Carousel)
   const sponsorRef = useRef<HTMLDivElement | null>(null);
   const [animationCss, setAnimationCss] = useState("");
   const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -76,18 +98,15 @@ export default function AboutSection() {
     const wrapper = wrapperRef.current;
     if (!track || !wrapper) return;
 
-    // ensure there are enough items to fill twice the wrapper width (buffer)
     const ensureFill = () => {
       const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
       while (track.scrollWidth < wrapper.clientWidth * 2) {
-        // clone children in-order to append
         const children = Array.from(track.children) as HTMLElement[];
         for (const ch of children) {
           const clone = ch.cloneNode(true) as HTMLElement;
           track.appendChild(clone);
           if (track.scrollWidth >= wrapper.clientWidth * 2) break;
         }
-        // prevent infinite loop
         if (track.children.length > 200) break;
       }
     };
@@ -95,7 +114,7 @@ export default function AboutSection() {
     ensureFill();
 
     const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
-    const speed = 80; // px per second, adjust for faster/slower
+    const speed = 80;
 
     let last = performance.now();
 
@@ -104,16 +123,12 @@ export default function AboutSection() {
       last = now;
       let pos = posRef.current - speed * dt;
 
-      // measure first child width including gap
       const first = track.children[0] as HTMLElement | undefined;
       if (first) {
         const firstWidth = first.getBoundingClientRect().width + gap;
-        // when first has fully left, move it to end and adjust pos
         while (pos <= -firstWidth) {
-          // move first element to end
           track.appendChild(first);
           pos += firstWidth;
-          // update first reference for next loop
           const newFirst = track.children[0] as HTMLElement | undefined;
           if (!newFirst) break;
         }
@@ -138,6 +153,8 @@ export default function AboutSection() {
   return (
     <main>
       <Navbar />
+
+      {/* Section Hero */}
       <section className="relative bg-[url('/image/Image_BG.jpg')] w-full min-h-screen bg-cover bg-center py-12 flex items-center justify-center">
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/80 to-transparent" />
         <div className="flex flex-col items-center justify-center relative z-10 text-white">
@@ -160,11 +177,7 @@ export default function AboutSection() {
           </div>
 
           <div>
-            <Button
-              variant="primary"
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://fonts.google.com/specimen/EB+Garamond">
+            <Button variant="primary" href="#event">
               Event
             </Button>
             <Button variant="border" className="ml-4" href="/contact">
@@ -173,6 +186,8 @@ export default function AboutSection() {
           </div>
         </div>
       </section>
+
+      {/* Section List Event */}
       <section id="event" className="py-16 bg-primary">
         <div className="flex flex-col px-4 ">
           <div className="max-w-3xl mx-auto px-4">
@@ -182,18 +197,38 @@ export default function AboutSection() {
             </h1>
           </div>
 
-          <div className="max-w-7xl mx-auto grid gap-6 px-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {visibleEvents.map((event) => (
-              <Card
-                key={event.title}
-                title={event.title}
-                description={event.description}
-                imageSrc={event.imageSrc}
-                className="h-full"></Card>
-            ))}
-          </div>
+          {/* Handler Kondisi Loading Data */}
+          {loading ? (
+            <div className="text-center text-white py-12 text-lg">
+              Mengambil data event terbaru dari database...
+            </div>
+          ) : visibleEvents.length === 0 ? (
+            <div className="text-center text-gray-400 py-12 text-lg">
+              Belum ada event yang terdaftar saat ini.
+            </div>
+          ) : (
+            <div className="max-w-7xl mx-auto grid gap-6 px-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {visibleEvents.map((event) => (
+                <EventCard
+                  key={event.event_id}
+                  title={event.nama_event}
+                  // Jika properti image_url bernilai null atau kosong, gunakan gambar default (fallback)
+                  imageSrc={event.image_url || "/image/Image_BG.jpg"}
+                  date={event.event_date}
+                  // Menentukan label kategori/tipe berdasarkan id jenis proker
+                  type={
+                    event.jenis_proker_id === 1 ? "Program Utama" : "Kegiatan"
+                  }
+                  // Tautan diarahkan langsung menuju halaman blog dinamis berbasis ID unik
+                  href={`/event/${event.event_id}`}
+                  className="h-full"
+                />
+              ))}
+            </div>
+          )}
 
-          {hasMore ? (
+          {/* Tombol Load More */}
+          {!loading && hasMore ? (
             <div className="flex justify-center mt-8">
               <Button variant="primary" onClick={handleLoadMore}>
                 Lainnya
@@ -202,8 +237,9 @@ export default function AboutSection() {
           ) : null}
         </div>
       </section>
+
+      {/* Section Carousel Sponsor */}
       <section id="sponsor" className="py-16 bg-primary overflow-hidden">
-        {/* dynamic CSS inserted after measuring track width to ensure seamless loop */}
         <style>{animationCss}</style>
 
         <div className="flex flex-col px-4">
@@ -229,6 +265,7 @@ export default function AboutSection() {
           </div>
         </div>
       </section>
+
       <Footer />
     </main>
   );

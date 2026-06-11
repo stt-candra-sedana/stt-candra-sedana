@@ -101,11 +101,11 @@ export default function OrganisasiSection() {
           </div>
         )}
 
-        <div className="mt-4 flex justify-center">
+        {/* <div className="mt-4 flex justify-center">
           <Button variant="primary" href="/about">
             Selengkapnya...
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

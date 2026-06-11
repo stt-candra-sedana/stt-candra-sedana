@@ -4,15 +4,18 @@ import type {
   ReactNode,
 } from "react";
 
-interface ButtonProps
-  extends
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    AnchorHTMLAttributes<HTMLAnchorElement> {
+type SharedButtonProps = {
   variant?: "primary" | "secondary" | "border";
   href?: string;
   blank?: boolean;
+  target?: string;
+  rel?: string;
   children: ReactNode;
-}
+};
+
+type ButtonProps =
+  | (SharedButtonProps & ButtonHTMLAttributes<HTMLButtonElement>)
+  | (SharedButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>);
 
 export default function Button({
   children,
@@ -31,8 +34,8 @@ export default function Button({
     variant === "secondary"
       ? "bg-secondary text-slate-900 hover:bg-slate-100 focus-visible:ring-slate-300"
       : variant === "border"
-      ? "bg-transparent border-[3px] border-secondary text-secondary hover:bg-secondary hover:text-accent focus-visible:ring-amber-400"
-      : "bg-accent text-white hover:bg-accent focus-visible:ring-amber-400";
+        ? "bg-transparent border-[3px] border-secondary text-secondary hover:bg-secondary hover:text-accent focus-visible:ring-amber-400"
+        : "bg-accent text-white hover:bg-accent focus-visible:ring-amber-400";
 
   const classes = `${baseStyles} ${variantStyles} ${className}`.trim();
   const targetAttr = blank ? "_blank" : target;
