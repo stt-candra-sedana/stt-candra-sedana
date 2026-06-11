@@ -22,11 +22,12 @@ export default function AboutSection() {
 
           <div className="max-w-3xl mx-auto px-4 text-center z-10 mb-8">
             <p>
-              "Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam Menjaga
-              Tradisi serta Mempererat Persaudaraan." Sebagai generasi penerus,
-              STT Candra Sedana berkomitmen untuk menjadi motor penggerak
-              kegiatan sosial, budaya, dan inovasi di lingkungan masyarakat,
-              berlandaskan nilai Tat Twam Asi dan semangat gotong royong
+              &quot;Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam
+              Menjaga Tradisi serta Mempererat Persaudaraan.&quot; Sebagai
+              generasi penerus, STT Candra Sedana berkomitmen untuk menjadi
+              motor penggerak kegiatan sosial, budaya, dan inovasi di lingkungan
+              masyarakat, berlandaskan nilai Tat Twam Asi dan semangat gotong
+              royong
             </p>
           </div>
 
@@ -35,8 +36,7 @@ export default function AboutSection() {
               variant="primary"
               target="_blank"
               rel="noreferrer noopener"
-              href="https://fonts.google.com/specimen/EB+Garamond"
-            >
+              href="https://fonts.google.com/specimen/EB+Garamond">
               Event
             </Button>
             <Button variant="border" className="ml-4" href="/contact">
@@ -61,8 +61,8 @@ export default function AboutSection() {
 
           <div className="w-full lg:w-1/2">
             <h2 className="text-2xl sm:text-3xl font-bold text-center lg:text-left text-accent mb-6">
-              "Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam Menjaga
-              Tradisi serta Mempererat Persaudaraan."
+              &quot;Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam
+              Menjaga Tradisi serta Mempererat Persaudaraan.&quot;
             </h2>
             <p className="text-base sm:text-lg leading-8 text-justify text-secondary">
               Sebagai generasi penerus, STT Candra Sedana berkomitmen untuk
@@ -74,83 +74,8 @@ export default function AboutSection() {
         </div>
       </section>
       <VisiMisiSection />
-      <section className="py-16 flex flex-col items-center text-center">
-        <div className="max-w-3xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">
-            <span className="text-accent">Struktur </span>
-            <span className="text-secondary">Organisasi</span>
-          </h2>
-        </div>
-        <div className="max-w-sm px-4 flex justify-center items-center">
-          <Card
-            imageSrc="\image\Raja_Hidimba.jpg"
-            imageAlt="Struktur Organisasi"
-            title="Ketua Umum"
-            description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-          ></Card>
-        </div>
-        <div className="container mx-auto px-4 grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8">
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Wakil Ketua Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-            />
-          </div>
+      <OrganisasiSection />
 
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Sekretaris Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-            />
-          </div>
-
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Wakil Ketua Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-            />
-          </div>
-
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Sekretaris Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-            />
-          </div>
-
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Wakil Ketua Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai pemimpin tertinggi organisasi dan bertanggung jawab atas pengambilan keputusan strategis."
-            />
-          </div>
-
-          <div className="max-w-sm mx-auto">
-            <Card
-              className="h-full"
-              title="Sekretaris Umum"
-              imageSrc="/image/Raja_Hidimba.jpg"
-              imageAlt="Struktur Organisasi"
-              description="Menjabat sebagai Sekretaris Umum dan bertanggung jawab atas pelaksanaan keputusan strategis."
-            />
-          </div>
-        </div>
-      </section>
       <Footer />
     </main>
   );

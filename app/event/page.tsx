@@ -41,17 +41,17 @@ const eventList = [
 const sponsorList = [
   {
     name: "Sponsor 1",
-    logoSrc: "/logo/logo1.jpg",
+    logoSrc: "/logo/logo STT.jpg.jpeg",
     href: "https://sponsor1.com",
   },
   {
     name: "Sponsor 2",
-    logoSrc: "/logo/logo2.jpg",
+    logoSrc: "/logo/logo STT.jpg.jpeg",
     href: "https://sponsor2.com",
   },
   {
     name: "Sponsor 3",
-    logoSrc: "/logo/logo3.jpg",
+    logoSrc: "/logo/logo STT.jpg.jpeg",
     href: "https://sponsor3.com",
   },
 ];
@@ -150,11 +150,12 @@ export default function AboutSection() {
 
           <div className="max-w-3xl mx-auto px-4 text-center z-10 mb-8">
             <p>
-              "Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam Menjaga
-              Tradisi serta Mempererat Persaudaraan." Sebagai generasi penerus,
-              STT Candra Sedana berkomitmen untuk menjadi motor penggerak
-              kegiatan sosial, budaya, dan inovasi di lingkungan masyarakat,
-              berlandaskan nilai Tat Twam Asi dan semangat gotong royong
+              &quot;Wadah Kreativitas dan Bakat Generasi Muda Banjar dalam
+              Menjaga Tradisi serta Mempererat Persaudaraan.&quot; Sebagai
+              generasi penerus, STT Candra Sedana berkomitmen untuk menjadi
+              motor penggerak kegiatan sosial, budaya, dan inovasi di lingkungan
+              masyarakat, berlandaskan nilai Tat Twam Asi dan semangat gotong
+              royong
             </p>
           </div>
 
@@ -163,8 +164,7 @@ export default function AboutSection() {
               variant="primary"
               target="_blank"
               rel="noreferrer noopener"
-              href="https://fonts.google.com/specimen/EB+Garamond"
-            >
+              href="https://fonts.google.com/specimen/EB+Garamond">
               Event
             </Button>
             <Button variant="border" className="ml-4" href="/contact">
@@ -189,8 +189,7 @@ export default function AboutSection() {
                 title={event.title}
                 description={event.description}
                 imageSrc={event.imageSrc}
-                className="h-full"
-              ></Card>
+                className="h-full"></Card>
             ))}
           </div>
 
