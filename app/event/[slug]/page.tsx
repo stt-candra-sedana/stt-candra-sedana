@@ -48,7 +48,7 @@ export default async function EventDetailPage({
             </Link>
             <span style={{ color: "#444" }}>/</span>
             <Link
-              href="/events"
+              href="/event"
               className="transition hover:opacity-70"
               style={{ color: "var(--accent)" }}>
               Event
