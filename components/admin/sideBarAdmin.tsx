@@ -8,6 +8,7 @@ const menus = [
   { label: "Visi & Misi", href: "/admin/visi-misi" },
   { label: "Struktur Organisasi", href: "/admin/pengurus" },
   { label: "Gallery & Sponsor", href: "/admin/galeri" },
+  { label: "Pengguna & Role", href: "/admin/users" },
 ];
 
 export default function SideBarAdmin() {
@@ -62,7 +63,7 @@ export default function SideBarAdmin() {
           style={{ height: "1px", background: "#2a2a2a", marginBottom: "16px" }}
         />
         <p className="text-xs" style={{ color: "#444" }}>
-          Menu lain akan aktif setelah CRUD selesai dibuat.
+          STT Candra Sedana © 2026
         </p>
       </div>
     </div>

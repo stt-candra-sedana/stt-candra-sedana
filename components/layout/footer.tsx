@@ -1,58 +1,175 @@
+"use client";
+
 import Link from "next/link";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-black text-secondary">
-      <div className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1.6fr]">
-          <div className="space-y-4">
-            <h1 className="text-3xl font-bold tracking-tight text-secondary sm:text-4xl">
-              <span className="text-accent">CANDRA </span>
-              <span className="text-secondary">SEDANA</span>
-            </h1>
-            <p className="max-w-sm text-sm leading-7 text-secondary">
-              Br. Kutuh Kaja, Desa Petulu, Kecamatan Ubud
+    <footer style={{ background: "var(--bali-dark)", color: "var(--secondary)" }}>
+      {/* Top ornament line */}
+      <div
+        className="h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, rgba(184,149,84,0.5), rgba(184,149,84,0.8), rgba(184,149,84,0.5), transparent)",
+        }}
+      />
+
+      <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
+        <div className="grid gap-12 md:grid-cols-[1.8fr_1fr_1.4fr]">
+          {/* Brand column */}
+          <div className="space-y-5">
+            <div>
+              <div className="bali-section-badge">Sekaa Truna Truni</div>
+              <h2
+                className="text-3xl font-bold tracking-tight leading-none"
+                style={{ fontFamily: "var(--font-poppins), sans-serif" }}
+              >
+                <span style={{ color: "var(--accent)" }}>CANDRA </span>
+                <span style={{ color: "var(--secondary)" }}>SEDANA</span>
+              </h2>
+            </div>
+            <p
+              className="text-sm leading-7 max-w-xs"
+              style={{ color: "var(--secondary-muted)", fontFamily: "var(--font-eb-garamond), serif" }}
+            >
+              Komunitas pemuda Banjar Kutuh Kaja, Desa Petulu, Ubud — menjaga
+              seni, budaya, dan tradisi Bali untuk generasi mendatang.
             </p>
+
+            {/* Social icons */}
+            <div className="flex gap-3">
+              {[
+                { label: "Instagram", icon: "📸", href: "https://instagram.com/st.candrasedana" },
+                { label: "WhatsApp", icon: "💬", href: "#" },
+              ].map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={social.label}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center text-sm transition-all duration-200"
+                  style={{
+                    background: "rgba(184,149,84,0.08)",
+                    border: "1px solid rgba(184,149,84,0.15)",
+                    color: "var(--accent)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(184,149,84,0.18)";
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "rgba(184,149,84,0.08)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
 
+          {/* Navigation column */}
           <div>
-            <h2 className="text-sm uppercase font-bold tracking-[0.3em] text-secondary">
+            <h3
+              className="text-xs uppercase font-bold tracking-[0.3em] mb-6"
+              style={{ color: "var(--accent)" }}
+            >
               Navigasi
-            </h2>
-            <ul className="mt-5 space-y-3 text-sm text-secondary">
-              <li>
-                <Link href="/about" className="transition hover:text-accent">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/" className="transition hover:text-accent">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/event" className="transition hover:text-accent">
-                  Event
-                </Link>
-              </li>
+            </h3>
+            <ul className="space-y-3 text-sm">
+              {[
+                { href: "/", label: "Home" },
+                { href: "/about", label: "Tentang Kami" },
+                { href: "#event", label: "Event" },
+                { href: "#kontak", label: "Kontak" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition-colors duration-200 flex items-center gap-2 group"
+                    style={{ color: "var(--secondary-muted)" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "var(--accent)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "var(--secondary-muted)")
+                    }
+                  >
+                    <span
+                      className="w-4 h-px transition-all"
+                      style={{ background: "currentColor", opacity: 0.4 }}
+                    />
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Contact column */}
           <div>
-            <h2 className="text-sm uppercase font-bold tracking-[0.3em] text-secondary">
+            <h3
+              className="text-xs uppercase font-bold tracking-[0.3em] mb-6"
+              style={{ color: "var(--accent)" }}
+            >
               Kontak Kami
-            </h2>
-            <div className="mt-5 space-y-2 text-sm leading-7 text-secondary">
-              <p>   
-                Jl. Tirta Tawar 63, Petulu, Kecamatan Ubud, Kabupaten Gianyar
-              </p>
-              <p>stcandrasedana</p>
+            </h3>
+            <div className="space-y-4 text-sm">
+              {[
+                {
+                  icon: "📍",
+                  text: "Br. Kutuh Kaja, Desa Petulu, Kec. Ubud, Kab. Gianyar, Bali",
+                },
+                {
+                  icon: "📸",
+                  text: "@st.candrasedana",
+                  href: "https://instagram.com/st.candrasedana",
+                },
+              ].map((item, i) => (
+                <div key={i} className="flex gap-3">
+                  <span className="text-base flex-shrink-0 mt-0.5">{item.icon}</span>
+                  {item.href ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="leading-6 transition-colors"
+                      style={{ color: "var(--secondary-muted)" }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "var(--accent)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "var(--secondary-muted)")
+                      }
+                    >
+                      {item.text}
+                    </a>
+                  ) : (
+                    <p className="leading-6" style={{ color: "var(--secondary-muted)" }}>
+                      {item.text}
+                    </p>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-primary-800 pt-6 text-center text-xs text-secondary sm:text-sm">
-          © 2026 Candra Sedana. Semua hak dilindungi.
+        {/* Bottom bar */}
+        <div
+          className="mt-12 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs"
+          style={{
+            borderTop: "1px solid rgba(184,149,84,0.1)",
+            color: "rgba(232,224,208,0.3)",
+          }}
+        >
+          <p>© {currentYear} STT Candra Sedana. Semua hak dilindungi.</p>
+          <p style={{ fontFamily: "var(--font-eb-garamond), serif", fontStyle: "italic" }}>
+            Tat Twam Asi · Menyatukan, Melestarikan, Berkreasi
+          </p>
         </div>
       </div>
     </footer>
