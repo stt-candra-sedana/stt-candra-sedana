@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase/client";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import { JenisProker } from "@/types";
+import { deleteCloudinaryAsset } from "@/actions/cloudinary";
 
 const inputStyle = {
   background: "#1e1e1e",
@@ -62,6 +63,14 @@ export default function EditEventPage() {
       return;
     }
     setLoading(true);
+
+    // Fetch original event to get current image_url before update
+    const { data: originalEvent } = await supabase
+      .from("events")
+      .select("image_url")
+      .eq("event_id", id)
+      .single();
+
     const { error } = await supabase
       .from("events")
       .update({
@@ -75,11 +84,19 @@ export default function EditEventPage() {
           : null,
       })
       .eq("event_id", id);
-    setLoading(false);
+
     if (error) {
+      setLoading(false);
       alert("Gagal update: " + error.message);
       return;
     }
+
+    // Delete old asset if image url changed or was deleted
+    if (originalEvent && originalEvent.image_url && originalEvent.image_url !== form.image_url) {
+      await deleteCloudinaryAsset(originalEvent.image_url);
+    }
+
+    setLoading(false);
     router.push("/admin/events");
   };
 

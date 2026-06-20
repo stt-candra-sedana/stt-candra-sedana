@@ -17,7 +17,7 @@ export default function OrganisasiSection() {
         "id, nama_pengurus, foto_url, instagram, whatsapp, facebook, tiktok, linkedin, jabatan(jabatan_id, nama_jabatan)",
       )
       .order("id", { ascending: true })
-      .limit(5)
+      .limit(10)
       .then(({ data }) => {
         const mapped = (data ?? []).map((s) => ({
           ...s,
@@ -36,8 +36,8 @@ export default function OrganisasiSection() {
   }, []);
 
   const ketua = pengurus[0] ?? null;
-  const wakil = pengurus.slice(1, 3);
-  const lainnya = pengurus.slice(3);
+  const wakil = pengurus.slice(1, 4);
+  const lainnya = pengurus.slice(4);
 
   // Common styling for pipeline paths
   const relationStyle = {
@@ -57,35 +57,52 @@ export default function OrganisasiSection() {
       const rels = [];
       if (wakil[0]) rels.push({ targetId: `pengurus-${wakil[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
       if (wakil[1]) rels.push({ targetId: `pengurus-${wakil[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+      if (wakil[2]) rels.push({ targetId: `pengurus-${wakil[2].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
       return rels;
     }
   };
 
   const getWakilRelations = (index: number) => {
     if (isMobile) {
-      if (index === 0) {
-        if (wakil[1]) return [{ targetId: `pengurus-${wakil[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
-        if (lainnya[0]) return [{ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
-      } else if (index === 1) {
-        if (lainnya[0]) return [{ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+      if (wakil[index + 1]) {
+        return [{ targetId: `pengurus-${wakil[index + 1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+      } else if (lainnya[0]) {
+        return [{ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
       }
       return [];
     } else {
-      if (index === 0) {
-        const rels = [];
-        if (lainnya[0]) rels.push({ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
-        if (lainnya.length === 3 && lainnya[1]) {
-          rels.push({ targetId: `pengurus-${lainnya[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+      // Desktop
+      if (wakil.length === 3) {
+        if (lainnya.length === 1) {
+          if (index === 1) {
+            return [{ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+          }
+        } else if (lainnya.length === 2) {
+          if (index === 0) return [{ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+          if (index === 2) return [{ targetId: `pengurus-${lainnya[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+        } else if (lainnya.length >= 3) {
+          if (lainnya[index]) {
+            return [{ targetId: `pengurus-${lainnya[index].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle }];
+          }
         }
-        return rels;
-      } else if (index === 1) {
-        const rels = [];
-        if (lainnya.length === 3 && lainnya[2]) {
-          rels.push({ targetId: `pengurus-${lainnya[2].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
-        } else if (lainnya.length === 2 && lainnya[1]) {
-          rels.push({ targetId: `pengurus-${lainnya[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+      } else {
+        // Fallback for wakil.length === 2
+        if (index === 0) {
+          const rels = [];
+          if (lainnya[0]) rels.push({ targetId: `pengurus-${lainnya[0].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+          if (lainnya.length === 3 && lainnya[1]) {
+            rels.push({ targetId: `pengurus-${lainnya[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+          }
+          return rels;
+        } else if (index === 1) {
+          const rels = [];
+          if (lainnya.length === 3 && lainnya[2]) {
+            rels.push({ targetId: `pengurus-${lainnya[2].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+          } else if (lainnya.length === 2 && lainnya[1]) {
+            rels.push({ targetId: `pengurus-${lainnya[1].id}`, targetAnchor: "top" as const, sourceAnchor: "bottom" as const, style: relationStyle });
+          }
+          return rels;
         }
-        return rels;
       }
       return [];
     }
@@ -109,11 +126,16 @@ export default function OrganisasiSection() {
   const getWakilSockets = (index: number) => {
     let showBottom = false;
     if (isMobile) {
-      if (index === 0) showBottom = wakil.length > 1 || lainnya.length > 0;
-      else if (index === 1) showBottom = lainnya.length > 0;
+      showBottom = index < wakil.length - 1 || lainnya.length > 0;
     } else {
-      if (index === 0) showBottom = lainnya.length > 0;
-      else if (index === 1) showBottom = lainnya.length >= 2;
+      if (wakil.length === 3) {
+        if (index === 0) showBottom = lainnya.length >= 2;
+        else if (index === 1) showBottom = lainnya.length === 1 || lainnya.length >= 3;
+        else if (index === 2) showBottom = lainnya.length >= 2;
+      } else {
+        if (index === 0) showBottom = lainnya.length > 0;
+        else if (index === 1) showBottom = lainnya.length >= 2;
+      }
     }
     return {
       showTopSocket: true,
@@ -201,10 +223,12 @@ export default function OrganisasiSection() {
               </div>
             )}
 
-            {/* BARIS 2: Wakil & Sekretaris */}
+            {/* BARIS 2: Wakil, Sekretaris & Bendahara */}
             {wakil.length > 0 && (
-              <div className="relative z-10 w-full max-w-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+              <div className={`relative z-10 w-full ${wakil.length === 3 ? "max-w-4xl" : "max-w-2xl"}`}>
+                <div className={`grid grid-cols-1 gap-12 md:gap-16 ${
+                  wakil.length === 3 ? "md:grid-cols-3" : "md:grid-cols-2"
+                }`}>
                   {wakil.map((p, idx) => (
                     <div key={p.id} className="relative w-full flex justify-center">
                       <ArcherElement
@@ -234,7 +258,9 @@ export default function OrganisasiSection() {
             {/* BARIS 3: Pengurus lain */}
             {lainnya.length > 0 && (
               <div className="relative z-10 w-full max-w-4xl">
-                <div className={`grid grid-cols-1 md:grid-cols-${lainnya.length === 2 ? "2" : "3"} gap-12 md:gap-16`}>
+                <div className={`grid grid-cols-1 gap-12 md:gap-16 ${
+                  lainnya.length === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
+                }`}>
                   {lainnya.map((p, idx) => (
                     <div key={p.id} className="relative w-full flex justify-center">
                       <ArcherElement
