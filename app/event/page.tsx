@@ -3,13 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "@/components/ui/button";
 import Navbar from "@/components/layout/navbar";
-import EventCard from "@/components/ui/eventCard";
 import SponsorCard from "@/components/ui/sponsor";
 import Footer from "@/components/layout/footer";
-// Pastikan file inisialisasi pusat ini sudah kamu buat di folder lib
 import { supabase } from "@/lib/supabase";
+import { FaChevronRight } from "react-icons/fa";
+import type { GallerySponsor } from "@/types";
 
-// 1. Definisikan tipe data TypeScript sesuai dengan skema tabel di Supabase
 interface SupabaseEvent {
   event_id: number;
   nama_event: string;
@@ -20,34 +19,37 @@ interface SupabaseEvent {
   jenis_proker_id: number;
 }
 
-// Data sponsor tetap kita pertahankan secara lokal sementara waktu
-const sponsorList = [
-  {
-    name: "Sponsor 1",
-    logoSrc: "/logo/logo STT.jpg.jpeg",
-    href: "https://sponsor1.com",
-  },
-  {
-    name: "Sponsor 2",
-    logoSrc: "/logo/logo STT.jpg.jpeg",
-    href: "https://sponsor2.com",
-  },
-  {
-    name: "Sponsor 3",
-    logoSrc: "/logo/logo STT.jpg.jpeg",
-    href: "https://sponsor3.com",
-  },
-];
+function formatDate(d: string | Date) {
+  const dateObj = typeof d === "string" ? new Date(d) : d;
+  try {
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(dateObj);
+  } catch {
+    return String(d);
+  }
+}
 
-export default function AboutSection() {
-  // State untuk menyimpan list data event dari database
+const getSnippet = (html: string, maxLen: number = 220) => {
+  if (!html) return "";
+  // Strip HTML tags using regex
+  const text = html.replace(/<[^>]*>/g, " ");
+  // Clean up extra whitespace
+  const cleaned = text.replace(/\s+/g, " ").trim();
+  if (cleaned.length <= maxLen) return cleaned;
+  return cleaned.substring(0, maxLen).trim() + "...";
+};
+
+export default function EventPage() {
   const [events, setEvents] = useState<SupabaseEvent[]>([]);
+  const [sponsors, setSponsors] = useState<GallerySponsor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // State untuk fitur pagination / load more
+  // Pagination / visible count for load more (starts at 3)
   const [visibleCount, setVisibleCount] = useState<number>(3);
 
-  // Mengambil sebagian data sesuai batas count untuk ditampilkan
   const visibleEvents = events.slice(0, visibleCount);
   const hasMore = visibleCount < events.length;
 
@@ -55,100 +57,47 @@ export default function AboutSection() {
     setVisibleCount((current) => Math.min(current + 3, events.length));
   };
 
-  // 2. Mengambil data dari Supabase menggunakan React useEffect Hook
   useEffect(() => {
-    async function fetchEvents() {
+    async function fetchData() {
       try {
-        setLoading(true); // Pastikan loading dimulai
+        setLoading(true);
 
-        const { data, error } = await supabase
-          .from("events") // ⚠️ Pastikan nama tabel di Supabase persis huruf kecil semua
+        // Fetch events sorted by date descending (latest events first)
+        const { data: eventData, error: eventError } = await supabase
+          .from("events")
           .select("*")
-          .order("event_date", { ascending: true });
+          .order("event_date", { ascending: false });
 
-        if (error) {
-          throw error;
-        }
+        if (eventError) throw eventError;
+        if (eventData) setEvents(eventData);
 
-        if (data) {
-          setEvents(data);
-        }
+        // Fetch sponsors from database
+        const { data: sponsorData, error: sponsorError } = await supabase
+          .from("gallery_sponsor")
+          .select("*")
+          .order("id_gallery", { ascending: true });
+
+        if (sponsorError) throw sponsorError;
+        if (sponsorData) setSponsors(sponsorData);
       } catch (error) {
-        // Jika terjadi error koneksi atau RLS, error akan tercatat di Console browser
         console.error("Gagal mengambil data dari Supabase:", error);
       } finally {
-        // Blok finally AKAN SELALU JALAN, baik sukses maupun error.
-        // Ini menjamin tulisan "Memuat Event..." akan hilang dan tidak stuck!
         setLoading(false);
       }
     }
 
-    fetchEvents();
+    fetchData();
   }, []);
 
-  // Konfigurasi animasi komidi putar (Sponsor Carousel)
-  const sponsorRef = useRef<HTMLDivElement | null>(null);
-  const [animationCss, setAnimationCss] = useState("");
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const posRef = useRef(0);
-
-  useEffect(() => {
-    const track = sponsorRef.current;
-    const wrapper = wrapperRef.current;
-    if (!track || !wrapper) return;
-
-    const ensureFill = () => {
-      const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
-      while (track.scrollWidth < wrapper.clientWidth * 2) {
-        const children = Array.from(track.children) as HTMLElement[];
-        for (const ch of children) {
-          const clone = ch.cloneNode(true) as HTMLElement;
-          track.appendChild(clone);
-          if (track.scrollWidth >= wrapper.clientWidth * 2) break;
-        }
-        if (track.children.length > 200) break;
-      }
-    };
-
-    ensureFill();
-
-    const gap = parseFloat(getComputedStyle(track).gap || "0") || 0;
-    const speed = 80;
-
-    let last = performance.now();
-
-    const step = (now: number) => {
-      const dt = (now - last) / 1000;
-      last = now;
-      let pos = posRef.current - speed * dt;
-
-      const first = track.children[0] as HTMLElement | undefined;
-      if (first) {
-        const firstWidth = first.getBoundingClientRect().width + gap;
-        while (pos <= -firstWidth) {
-          track.appendChild(first);
-          pos += firstWidth;
-          const newFirst = track.children[0] as HTMLElement | undefined;
-          if (!newFirst) break;
-        }
-      }
-
-      posRef.current = pos;
-      track.style.transform = `translateX(${pos}px)`;
-      rafRef.current = requestAnimationFrame(step);
-    };
-
-    rafRef.current = requestAnimationFrame(step);
-
-    const onResize = () => ensureFill();
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", onResize);
-    };
-  }, []);
+  // Helper to ensure enough elements for seamless infinite marquee scrolling
+  const getRepeatedSponsors = () => {
+    if (sponsors.length === 0) return [];
+    let list = [...sponsors];
+    while (list.length < 10) {
+      list = [...list, ...sponsors];
+    }
+    return [...list, ...list];
+  };
 
   return (
     <main>
@@ -187,49 +136,90 @@ export default function AboutSection() {
         </div>
       </section>
 
-      {/* Section List Event */}
-      <section id="event" className="py-16 bg-primary">
-        <div className="flex flex-col px-4 ">
-          <div className="max-w-3xl mx-auto px-4">
-            <h1 className="text-3xl font-bold text-center mb-8">
+      {/* Section List Event with Premium Horizontal Layout */}
+      <section id="event" className="py-24 relative overflow-hidden" style={{ background: "var(--primary)" }}>
+        <div className="flex flex-col px-4">
+          
+          {/* Title & Badge */}
+          <div className="max-w-3xl mx-auto flex flex-col items-center mb-16">
+            <div className="bali-section-badge mb-3">
+              Agenda Kegiatan
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-center">
               <span className="text-accent">Event </span>
               <span className="text-secondary">Kami</span>
-            </h1>
+            </h2>
+            <div className="flex items-center gap-3 mt-4 w-32">
+              <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-[var(--accent)]/50" />
+              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>✦</span>
+              <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-[var(--accent)]/50" />
+            </div>
           </div>
 
-          {/* Handler Kondisi Loading Data */}
+          {/* Loading / Conditions Handler */}
           {loading ? (
-            <div className="text-center text-white py-12 text-lg">
-              Mengambil data event terbaru dari database...
+            <div className="text-center py-20 text-white flex flex-col items-center justify-center">
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--accent)]/30 border-t-[var(--accent)] animate-spin mb-4" />
+              <div className="text-[var(--secondary)] tracking-widest text-xs uppercase animate-pulse">
+                Mengambil data event terbaru dari database...
+              </div>
             </div>
           ) : visibleEvents.length === 0 ? (
             <div className="text-center text-gray-400 py-12 text-lg">
               Belum ada event yang terdaftar saat ini.
             </div>
           ) : (
-            <div className="max-w-7xl mx-auto grid gap-6 px-4 pb-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            /* Premium Row layout (Image on the right, details on the left) */
+            <div className="max-w-4xl mx-auto flex flex-col gap-8 px-4 pb-4 w-full">
               {visibleEvents.map((event) => (
-                <EventCard
+                <div 
                   key={event.event_id}
-                  title={event.nama_event}
-                  // Jika properti image_url bernilai null atau kosong, gunakan gambar default (fallback)
-                  imageSrc={event.image_url || "/image/Image_BG.jpg"}
-                  date={event.event_date}
-                  // Menentukan label kategori/tipe berdasarkan id jenis proker
-                  type={
-                    event.jenis_proker_id === 1 ? "Program Utama" : "Kegiatan"
-                  }
-                  // Tautan diarahkan langsung menuju halaman blog dinamis berbasis ID unik
-                  href={`/event/${event.event_id}`}
-                  className="h-full"
-                />
+                  className="relative flex flex-col-reverse md:flex-row gap-6 md:gap-8 rounded-2xl border border-[var(--accent)]/20 bg-gradient-to-br from-[#14120e] to-[#0a0806] p-6 shadow-xl hover:border-[var(--accent)]/50 hover:shadow-[0_10px_25px_rgba(184,149,84,0.15)] transition-all duration-500 group w-full"
+                >
+                  {/* Left Side: Info, Snippet, and Detail Link */}
+                  <div className="flex-grow flex flex-col justify-between gap-3 text-left">
+                    <div className="flex flex-col gap-2.5">
+                      <div className="flex items-center gap-2.5 text-xs text-[var(--accent)] font-semibold tracking-wider uppercase">
+                        <span>{event.jenis_proker_id === 1 ? "Program Utama" : "Kegiatan"}</span>
+                        <span className="w-1 h-1 rounded-full bg-[var(--accent)]/40" />
+                        <span className="text-[var(--secondary)]/60 normal-case font-normal">{formatDate(event.event_date)}</span>
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-[var(--secondary)] group-hover:text-white transition-colors duration-300">
+                        {event.nama_event}
+                      </h3>
+                      <p className="text-sm text-[var(--secondary)]/70 line-clamp-3 sm:line-clamp-4 leading-relaxed font-sans mt-1">
+                        {getSnippet(event.deskripsi_acara)}
+                      </p>
+                    </div>
+                    
+                    <div className="pt-2">
+                      <a 
+                        href={`/event/${event.event_id}`}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:text-[var(--accent-light)] transition-colors group/link"
+                      >
+                        Selengkapnya
+                        <FaChevronRight className="text-[10px] transform group-hover/link:translate-x-1 transition-transform" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Right Side: Image */}
+                  <div className="w-full md:w-80 h-48 md:h-auto min-h-[180px] relative rounded-xl overflow-hidden flex-shrink-0 bg-[#0f0d0a]/80 border border-[var(--accent)]/15">
+                    <img
+                      src={event.image_url || "/image/Image_BG.jpg"}
+                      alt={event.nama_event}
+                      className="object-cover w-full h-full transition-transform duration-750 group-hover:scale-104"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0806]/40 via-transparent to-transparent" />
+                  </div>
+                </div>
               ))}
             </div>
           )}
 
-          {/* Tombol Load More */}
+          {/* Load More Button */}
           {!loading && hasMore ? (
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-10">
               <Button variant="primary" onClick={handleLoadMore}>
                 Lainnya
               </Button>
@@ -238,31 +228,62 @@ export default function AboutSection() {
         </div>
       </section>
 
-      {/* Section Carousel Sponsor */}
-      <section id="sponsor" className="py-16 bg-primary overflow-hidden">
-        <style>{animationCss}</style>
+      {/* Section Carousel Sponsor (CSS Marquee-based) */}
+      <section id="sponsor" className="py-20 relative overflow-hidden" style={{ background: "var(--primary)" }}>
+        {/* CSS Keyframe definition for smooth infinite loop marquee */}
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .animate-marquee-custom {
+            display: flex;
+            width: max-content;
+            animation: marquee 30s linear infinite;
+          }
+          .animate-marquee-custom:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
 
-        <div className="flex flex-col px-4">
-          <div className="max-w-3xl mx-auto px-4">
-            <h1 className="text-3xl font-bold text-center mb-8">
+        <div className="flex flex-col items-center px-4">
+          <div className="max-w-3xl mx-auto flex flex-col items-center mb-12">
+            <div className="bali-section-badge mb-3">
+              Kemitraan
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-center">
               <span className="text-accent">Sponsor </span>
               <span className="text-secondary">Kami</span>
             </h1>
-          </div>
-
-          <div className="w-full overflow-hidden" ref={wrapperRef}>
-            <div className="sponsor-carousel flex gap-6 px-4" ref={sponsorRef}>
-              {sponsorList.map((sponsor, index) => (
-                <div key={`${sponsor.name}-${index}`} className="shrink-0 w-56">
-                  <SponsorCard
-                    name={sponsor.name}
-                    logoSrc={sponsor.logoSrc}
-                    href={sponsor.href}
-                  />
-                </div>
-              ))}
+            <div className="flex items-center gap-3 mt-4 w-32">
+              <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-[var(--accent)]/50" />
+              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>✦</span>
+              <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-[var(--accent)]/50" />
             </div>
           </div>
+
+          {sponsors.length === 0 ? (
+            <div className="text-center text-[var(--secondary)]/60 text-sm tracking-wide py-4">
+              Belum ada sponsor saat ini.
+            </div>
+          ) : (
+            <div className="w-full relative overflow-hidden py-4">
+              {/* Fade out edges overlay for premium slider look */}
+              <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[var(--primary)] to-transparent z-10 pointer-events-none" />
+              <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[var(--primary)] to-transparent z-10 pointer-events-none" />
+
+              <div className="animate-marquee-custom gap-8">
+                {getRepeatedSponsors().map((sponsor, index) => (
+                  <div key={`${sponsor.id_gallery}-${index}`} className="shrink-0 w-56">
+                    <SponsorCard
+                      name={sponsor.nama_sponsor}
+                      logoSrc={sponsor.media_url}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
