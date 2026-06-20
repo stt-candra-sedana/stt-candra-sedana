@@ -82,6 +82,19 @@ export default function EditStrukturPage() {
     }
   };
 
+  function getSupabasePathFromUrl(url: string, bucketName: string = "images"): string | null {
+    if (!url || !url.includes("/storage/v1/object/public/")) return null;
+    try {
+      const searchStr = `/storage/v1/object/public/${bucketName}/`;
+      const index = url.indexOf(searchStr);
+      if (index === -1) return null;
+      return url.substring(index + searchStr.length);
+    } catch (error) {
+      console.error("Error parsing Supabase Storage URL:", error);
+      return null;
+    }
+  }
+
   const handleSubmit = async () => {
     if (!form.nama_pengurus || !form.jabatan_id) {
       alert("Nama pengurus dan jabatan wajib diisi!");
@@ -92,6 +105,14 @@ export default function EditStrukturPage() {
       return;
     }
     setLoading(true);
+
+    // Fetch original pengurus record to get current foto_url before update
+    const { data: original } = await supabase
+      .from("struktur_organisasi")
+      .select("foto_url")
+      .eq("id", id)
+      .single();
+
     const { error } = await supabase
       .from("struktur_organisasi")
       .update({
@@ -105,11 +126,22 @@ export default function EditStrukturPage() {
         linkedin: form.linkedin || null,
       })
       .eq("id", id);
-    setLoading(false);
+
     if (error) {
+      setLoading(false);
       alert("Gagal update: " + error.message);
       return;
     }
+
+    // Delete old profile picture from Supabase Storage if it was replaced or removed
+    if (original && original.foto_url && original.foto_url !== form.foto_url) {
+      const path = getSupabasePathFromUrl(original.foto_url);
+      if (path) {
+        await supabase.storage.from("images").remove([path]);
+      }
+    }
+
+    setLoading(false);
     router.push("/admin/pengurus");
   };
 

@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { Event } from "@/types";
+import { deleteCloudinaryAsset } from "@/actions/cloudinary";
 
 export default function AdminEventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -31,7 +32,25 @@ export default function AdminEventsPage() {
 
   const handleDelete = async (id: number, nama: string) => {
     if (!confirm(`Hapus event "${nama}"?`)) return;
-    await supabase.from("events").delete().eq("event_id", id);
+
+    // Fetch image_url to delete it from Cloudinary afterwards
+    const { data: event } = await supabase
+      .from("events")
+      .select("image_url")
+      .eq("event_id", id)
+      .single();
+
+    const { error } = await supabase.from("events").delete().eq("event_id", id);
+    if (error) {
+      alert("Gagal menghapus event: " + error.message);
+      return;
+    }
+
+    // If there was an image, delete it from Cloudinary
+    if (event && event.image_url) {
+      await deleteCloudinaryAsset(event.image_url);
+    }
+
     fetchEvents();
   };
 

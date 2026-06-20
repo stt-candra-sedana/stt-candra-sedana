@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
 import { supabase } from "@/lib/supabase/client";
+import { deleteCloudinaryAsset } from "@/actions/cloudinary";
 
 interface MediaItem {
   id_gallery: number;
@@ -49,8 +50,14 @@ export default function GalleryPage() {
   }, []);
 
   // Hanya bertugas menangkap hasil upload dari Cloudinary
-  const handleUploadSuccess = (result: any) => {
+  const handleUploadSuccess = async (result: any) => {
     const imageUrl = result.info.public_id;
+    
+    // If there was a previous image uploaded in this session but not saved, clean it up
+    if (uploadedImageUrl) {
+      await deleteCloudinaryAsset(uploadedImageUrl);
+    }
+
     setUploadedImageUrl(imageUrl);
     alert(
       "Gambar berhasil diunggah ke server media. Silakan klik 'Simpan Data' untuk memfinalisasi.",
@@ -98,6 +105,13 @@ export default function GalleryPage() {
   const handleDelete = async (id: number) => {
     if (!confirm("Yakin ingin menghapus media ini?")) return;
 
+    // Fetch the sponsor to get the media_url before deleting
+    const { data: sponsor } = await supabase
+      .from("gallery_sponsor")
+      .select("media_url")
+      .eq("id_gallery", id)
+      .single();
+
     const { error } = await supabase
       .from("gallery_sponsor")
       .delete()
@@ -106,6 +120,11 @@ export default function GalleryPage() {
     if (error) {
       alert("Gagal menghapus media.");
       return;
+    }
+
+    // Delete the image from Cloudinary
+    if (sponsor && sponsor.media_url) {
+      await deleteCloudinaryAsset(sponsor.media_url);
     }
 
     fetchMedia();

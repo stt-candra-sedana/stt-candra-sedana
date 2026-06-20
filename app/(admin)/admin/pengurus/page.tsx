@@ -24,9 +24,43 @@ export default function AdminStrukturPage() {
     setLoading(false);
   }, []);
 
+  function getSupabasePathFromUrl(url: string, bucketName: string = "images"): string | null {
+    if (!url || !url.includes("/storage/v1/object/public/")) return null;
+    try {
+      const searchStr = `/storage/v1/object/public/${bucketName}/`;
+      const index = url.indexOf(searchStr);
+      if (index === -1) return null;
+      return url.substring(index + searchStr.length);
+    } catch (error) {
+      console.error("Error parsing Supabase Storage URL:", error);
+      return null;
+    }
+  }
+
   const handleDelete = async (id: number, nama: string) => {
     if (!confirm(`Hapus "${nama}" dari struktur organisasi?`)) return;
-    await supabase.from("struktur_organisasi").delete().eq("id", id);
+
+    // Fetch the record to get the image URL before deletion
+    const { data: record } = await supabase
+      .from("struktur_organisasi")
+      .select("foto_url")
+      .eq("id", id)
+      .single();
+
+    const { error } = await supabase.from("struktur_organisasi").delete().eq("id", id);
+    if (error) {
+      alert("Gagal menghapus pengurus: " + error.message);
+      return;
+    }
+
+    // Delete photo from Supabase Storage bucket if it exists
+    if (record && record.foto_url) {
+      const path = getSupabasePathFromUrl(record.foto_url);
+      if (path) {
+        await supabase.storage.from("images").remove([path]);
+      }
+    }
+
     fetchStruktur();
   };
 
