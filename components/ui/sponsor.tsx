@@ -19,11 +19,17 @@ export default function SponsorCard({
 }: SponsorCardProps) {
   const content = (
     <div
-      className={`rounded-2xl border border-accent bg-secondary shadow-xl shadow-black/10 overflow-hidden p-6 flex items-center justify-center min-h-37.5 transition duration-300 hover:shadow-2xl hover:shadow-black/20 ${className}`}
+      className={`rounded-2xl border border-[var(--accent)]/30 bg-[#14120e] shadow-xl overflow-hidden p-6 flex items-center justify-center min-h-[140px] transition-all duration-300 hover:border-[var(--accent)]/65 hover:shadow-[0_4px_20px_rgba(184,149,84,0.12)] hover:-translate-y-0.5 group ${className}`}
     >
-      <div className="flex flex-col items-center gap-4">
-        <img src={logoSrc} alt={logoAlt} className="h-24 w-24 object-contain" />
-        <h3 className="text-center font-semibold text-accent text-sm">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-16 w-32 relative flex items-center justify-center">
+          <img 
+            src={logoSrc} 
+            alt={logoAlt} 
+            className="max-h-full max-w-full object-contain filter brightness-90 group-hover:brightness-100 transition-all duration-300" 
+          />
+        </div>
+        <h3 className="text-center font-semibold text-[var(--accent)]/90 group-hover:text-[var(--accent)] text-xs tracking-wider uppercase transition-colors">
           {name}
         </h3>
         {children}
@@ -46,3 +52,4 @@ export default function SponsorCard({
 
   return content;
 }
+
