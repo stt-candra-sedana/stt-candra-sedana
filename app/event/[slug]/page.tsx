@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/layout/footer";
 import { supabase } from "@/lib/supabase";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaExternalLinkAlt } from "react-icons/fa";
 
 interface EventDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -33,30 +33,35 @@ export default async function EventDetailPage({
   return (
     <main
       className="min-h-screen flex flex-col justify-between"
-      style={{ background: "var(--primary)", color: "var(--secondary)" }}>
+      style={{ background: "var(--primary)", color: "var(--secondary)" }}
+    >
       <div>
         <article className="container mx-auto px-4 py-16 max-w-3xl">
           {/* Breadcrumbs */}
           <nav
             className="flex items-center gap-2 text-sm mb-8"
-            aria-label="Breadcrumb">
+            aria-label="Breadcrumb"
+          >
             <Link
               href="/"
               className="transition hover:opacity-70"
-              style={{ color: "var(--accent)" }}>
+              style={{ color: "var(--accent)" }}
+            >
               Beranda
             </Link>
             <span style={{ color: "#444" }}>/</span>
             <Link
               href="/event"
               className="transition hover:opacity-70"
-              style={{ color: "var(--accent)" }}>
+              style={{ color: "var(--accent)" }}
+            >
               Event
             </Link>
             <span style={{ color: "#444" }}>/</span>
             <span
-              className="truncate max-w-[200px]"
-              style={{ color: "var(--secondary)" }}>
+              className="truncate max-w-50"
+              style={{ color: "var(--secondary)" }}
+            >
               {event.nama_event}
             </span>
           </nav>
@@ -69,7 +74,8 @@ export default async function EventDetailPage({
                 background: "rgba(184,149,84,0.15)",
                 color: "var(--accent)",
                 border: "1px solid rgba(184,149,84,0.3)",
-              }}>
+              }}
+            >
               STT CANDRA SEDANA
             </span>
           </div>
@@ -77,14 +83,16 @@ export default async function EventDetailPage({
           {/* Judul */}
           <h1
             className="text-3xl md:text-4xl font-bold mb-4 leading-tight"
-            style={{ color: "var(--secondary)" }}>
+            style={{ color: "var(--secondary)" }}
+          >
             {event.nama_event}
           </h1>
 
           {/* Meta */}
           <div
             className="flex items-center gap-4 text-sm mb-8 pb-4"
-            style={{ borderBottom: "1px solid #2a2a2a", color: "#666" }}>
+            style={{ borderBottom: "1px solid #2a2a2a", color: "#666" }}
+          >
             <p>
               Oleh:{" "}
               <span style={{ color: "var(--secondary)", fontWeight: 500 }}>
@@ -98,18 +106,36 @@ export default async function EventDetailPage({
             </div>
           </div>
 
-          {/* Gambar */}
+          {/* Gambar dari Cloudinary / Fallback */}
           <div
             className="relative w-full h-64 sm:h-96 rounded-xl overflow-hidden mb-8 shadow-xl"
-            style={{ border: "1px solid #2a2a2a" }}>
+            style={{ border: "1px solid #2a2a2a" }}
+          >
             <Image
               src={event.image_url || "/image/Image_BG.jpg"}
               alt={event.nama_event}
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 768px) 100vw, 768px"
             />
           </div>
+
+          {/* Tombol Registrasi (Optional - Ditambahkan jika ada URL Registrasi) */}
+          {event.url_registrasi && (
+            <div className="mb-8">
+              <a
+                href={event.url_registrasi}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-sm transition hover:opacity-90"
+                style={{ background: "var(--accent)", color: "var(--primary)" }}
+              >
+                <FaExternalLinkAlt size={14} />
+                Registrasi Acara di Sini
+              </a>
+            </div>
+          )}
 
           {/* Konten rich text */}
           <div

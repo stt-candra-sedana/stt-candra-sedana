@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
+import { CldUploadWidget, CldImage } from "next-cloudinary";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import { JenisProker } from "@/types";
 
@@ -70,24 +71,28 @@ export default function TambahEventPage() {
         <button
           onClick={() => router.push("/admin/events")}
           style={{ color: "var(--accent)" }}
-          className="text-sm hover:opacity-70">
+          className="text-sm hover:opacity-70"
+        >
           ← Kembali
         </button>
         <h1
           className="text-2xl font-bold"
-          style={{ color: "var(--secondary)" }}>
+          style={{ color: "var(--secondary)" }}
+        >
           Tambah Event
         </h1>
       </div>
 
       <div
         className="flex flex-col gap-5 rounded-xl p-6"
-        style={{ background: "#111", border: "1px solid #2a2a2a" }}>
+        style={{ background: "#111", border: "1px solid #2a2a2a" }}
+      >
         {/* Nama Event */}
         <div>
           <label
             className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
+            style={{ color: "var(--accent)" }}
+          >
             Nama Event *
           </label>
           <input
@@ -102,7 +107,8 @@ export default function TambahEventPage() {
         <div>
           <label
             className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
+            style={{ color: "var(--accent)" }}
+          >
             Tanggal *
           </label>
           <input
@@ -117,13 +123,15 @@ export default function TambahEventPage() {
         <div>
           <label
             className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
+            style={{ color: "var(--accent)" }}
+          >
             Jenis Program Kerja
           </label>
           <select
             style={inputStyle}
             value={form.jenis_proker_id}
-            onChange={(e) => handleChange("jenis_proker_id", e.target.value)}>
+            onChange={(e) => handleChange("jenis_proker_id", e.target.value)}
+          >
             <option value="">-- Pilih Jenis Proker --</option>
             {jenisProkerList.map((j) => (
               <option key={j.jenis_proker_id} value={j.jenis_proker_id}>
@@ -137,7 +145,8 @@ export default function TambahEventPage() {
         <div>
           <label
             className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
+            style={{ color: "var(--accent)" }}
+          >
             URL Registrasi
           </label>
           <input
@@ -148,26 +157,70 @@ export default function TambahEventPage() {
           />
         </div>
 
-        {/* URL Gambar Cover */}
+        {/* Gambar Cover (Cloudinary Widget) */}
         <div>
           <label
-            className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
-            URL Gambar Cover
+            className="block text-sm font-medium mb-2"
+            style={{ color: "var(--accent)" }}
+          >
+            Gambar Cover
           </label>
-          <input
-            style={inputStyle}
-            placeholder="https://... (opsional)"
-            value={form.image_url}
-            onChange={(e) => handleChange("image_url", e.target.value)}
-          />
+
+          <div className="flex flex-col gap-3">
+            {/* Pratinjau Gambar jika sudah diunggah */}
+            {form.image_url && (
+              <div className="relative w-full h-48 rounded-lg overflow-hidden border border-[#2a2a2a]">
+                <CldImage
+                  src={form.image_url}
+                  alt="Cover Preview"
+                  fill
+                  className="object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleChange("image_url", "")}
+                  className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700 transition"
+                >
+                  Hapus Gambar
+                </button>
+              </div>
+            )}
+
+            {/* Widget Unggah Cloudinary */}
+            <CldUploadWidget
+              uploadPreset="preset_gallery" // Sesuaikan dengan nama preset dari image_a0f7ee.png
+              onSuccess={(result) => {
+                if (result.info && typeof result.info !== "string") {
+                  handleChange("image_url", result.info.secure_url);
+                }
+              }}
+            >
+              {({ open }) => (
+                <button
+                  type="button"
+                  onClick={() => open()}
+                  className="w-full py-3 border border-dashed rounded-lg text-sm font-medium transition"
+                  style={{
+                    borderColor: "var(--accent)",
+                    color: "var(--accent)",
+                    background: "rgba(var(--accent-rgb), 0.05)",
+                  }}
+                >
+                  {form.image_url
+                    ? "Ganti Gambar Cover"
+                    : "➕ Unggah Gambar Cover"}
+                </button>
+              )}
+            </CldUploadWidget>
+          </div>
         </div>
 
         {/* Deskripsi */}
         <div>
           <label
             className="block text-sm font-medium mb-1"
-            style={{ color: "var(--accent)" }}>
+            style={{ color: "var(--accent)" }}
+          >
             Deskripsi Acara
           </label>
           <RichTextEditor
@@ -182,13 +235,15 @@ export default function TambahEventPage() {
             onClick={handleSubmit}
             disabled={loading}
             className="px-6 py-2 rounded font-medium text-sm disabled:opacity-50"
-            style={{ background: "var(--accent)", color: "var(--primary)" }}>
+            style={{ background: "var(--accent)", color: "var(--primary)" }}
+          >
             {loading ? "Menyimpan..." : "Simpan Event"}
           </button>
           <button
             onClick={() => router.push("/admin/events")}
             className="px-6 py-2 rounded text-sm"
-            style={{ border: "1px solid #2a2a2a", color: "var(--secondary)" }}>
+            style={{ border: "1px solid #2a2a2a", color: "var(--secondary)" }}
+          >
             Batal
           </button>
         </div>
