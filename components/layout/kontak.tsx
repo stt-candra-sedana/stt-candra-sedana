@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { FaInstagram, FaLocationDot, FaArrowRight } from "react-icons/fa6";
 
 export default function KontakSection() {
   return (
-    <section id="kontak" className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section
+      id="kontak"
+      className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -18,7 +21,9 @@ export default function KontakSection() {
         {/* Section header */}
         <div className="text-center mb-16">
           <div className="bali-section-badge justify-center">Terhubung</div>
-          <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: "var(--secondary)" }}>
+          <h2
+            className="text-3xl sm:text-4xl font-bold"
+            style={{ color: "var(--secondary)" }}>
             <span style={{ color: "var(--accent)" }}>Kontak </span>& Ikuti Kami
           </h2>
         </div>
@@ -30,7 +35,8 @@ export default function KontakSection() {
               className="absolute -inset-3 rounded-3xl"
               style={{
                 border: "1px solid rgba(184,149,84,0.12)",
-                background: "linear-gradient(135deg, rgba(184,149,84,0.04) 0%, transparent 60%)",
+                background:
+                  "linear-gradient(135deg, rgba(184,149,84,0.04) 0%, transparent 60%)",
               }}
             />
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
@@ -59,9 +65,9 @@ export default function KontakSection() {
                     color: "#0a0a0a",
                     backdropFilter: "blur(8px)",
                     fontFamily: "var(--font-poppins)",
-                  }}
-                >
-                  📸 @st.candrasedana
+                  }}>
+                  <FaInstagram size={16} />
+                  @st.candrasedana
                 </a>
               </div>
             </div>
@@ -71,69 +77,80 @@ export default function KontakSection() {
           <div className="order-1 lg:order-2 space-y-8">
             <p
               className="text-base sm:text-lg leading-8"
-              style={{ color: "var(--secondary-muted)", fontFamily: "var(--font-eb-garamond), serif" }}
-            >
+              style={{
+                color: "var(--secondary-muted)",
+                fontFamily: "var(--font-eb-garamond), serif",
+              }}>
               Tetap terhubung dengan seluruh rangkaian kegiatan dan kreativitas
-              pemuda Seka Truna Truni Kutuh Kaja melalui akun Instagram resmi kami.
-              Di sana kami membagikan dokumentasi Ngayah, perayaan budaya, hingga
-              berbagai inisiatif komunitas.
+              pemuda Seka Truna Truni Kutuh Kaja melalui akun Instagram resmi
+              kami. Di sana kami membagikan dokumentasi Ngayah, perayaan budaya,
+              hingga berbagai inisiatif komunitas.
             </p>
 
             {/* Contact cards */}
             <div className="space-y-3">
               {[
                 {
-                  icon: "📸",
+                  icon: FaInstagram,
                   label: "Instagram",
                   value: "@st.candrasedana",
                   href: "https://instagram.com/st.candrasedana",
                 },
                 {
-                  icon: "📍",
+                  icon: FaLocationDot,
                   label: "Alamat",
                   value: "Br. Kutuh Kaja, Desa Petulu, Ubud, Gianyar, Bali",
                 },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="flex items-start gap-4 rounded-2xl p-4"
-                  style={{
-                    background: "rgba(184,149,84,0.05)",
-                    border: "1px solid rgba(184,149,84,0.12)",
-                  }}
-                >
-                  <span className="text-2xl flex-shrink-0 mt-0.5">{item.icon}</span>
-                  <div>
-                    <p
-                      className="text-xs uppercase tracking-[0.2em] mb-1"
-                      style={{ color: "var(--accent)", fontFamily: "var(--font-poppins)" }}
-                    >
-                      {item.label}
-                    </p>
-                    {item.href ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="text-sm font-medium transition-colors"
-                        style={{ color: "var(--secondary)" }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.color = "var(--accent)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.color = "var(--secondary)")
-                        }
-                      >
-                        {item.value}
-                      </a>
-                    ) : (
-                      <p className="text-sm" style={{ color: "var(--secondary)" }}>
-                        {item.value}
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.label}
+                    className="flex items-start gap-4 rounded-2xl p-4"
+                    style={{
+                      background: "rgba(184,149,84,0.05)",
+                      border: "1px solid rgba(184,149,84,0.12)",
+                    }}>
+                    <Icon
+                      size={22}
+                      className="flex-shrink-0 mt-0.5"
+                      style={{ color: "var(--accent)" }}
+                    />
+                    <div>
+                      <p
+                        className="text-xs uppercase tracking-[0.2em] mb-1"
+                        style={{
+                          color: "var(--accent)",
+                          fontFamily: "var(--font-poppins)",
+                        }}>
+                        {item.label}
                       </p>
-                    )}
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-sm font-medium transition-colors"
+                          style={{ color: "var(--secondary)" }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.color = "var(--accent)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.color = "var(--secondary)")
+                          }>
+                          {item.value}
+                        </a>
+                      ) : (
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--secondary)" }}>
+                          {item.value}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* CTA */}
@@ -154,9 +171,9 @@ export default function KontakSection() {
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = "var(--accent)";
                 e.currentTarget.style.transform = "translateY(0)";
-              }}
-            >
-              Ikuti di Instagram →
+              }}>
+              Ikuti di Instagram
+              <FaArrowRight size={14} />
             </a>
           </div>
         </div>

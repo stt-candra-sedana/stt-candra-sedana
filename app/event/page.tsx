@@ -6,8 +6,8 @@ import Navbar from "@/components/layout/navbar";
 import SponsorCard from "@/components/ui/sponsor";
 import Footer from "@/components/layout/footer";
 import { supabase } from "@/lib/supabase";
-import { FaChevronRight } from "react-icons/fa";
 import type { GallerySponsor } from "@/types";
+import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 
 interface SupabaseEvent {
   event_id: number;
@@ -126,32 +126,35 @@ export default function EventPage() {
           </div>
 
           <div>
-            <Button variant="primary" href="#event">
-              Event
-            </Button>
-            <Button variant="border" className="ml-4" href="/contact">
-              Daftar
-            </Button>
+            <a
+              href="#event"
+              aria-label="Scroll ke bawah"
+              className="flex items-center justify-center w-12 h-12 rounded-full border transition hover:opacity-70 animate-bounce mx-auto mt-4"
+              style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
+              <FaChevronDown size={18} />
+            </a>
           </div>
         </div>
       </section>
 
       {/* Section List Event with Premium Horizontal Layout */}
-      <section id="event" className="py-24 relative overflow-hidden" style={{ background: "var(--primary)" }}>
+      <section
+        id="event"
+        className="py-24 relative overflow-hidden"
+        style={{ background: "var(--primary)" }}>
         <div className="flex flex-col px-4">
-          
           {/* Title & Badge */}
           <div className="max-w-3xl mx-auto flex flex-col items-center mb-16">
-            <div className="bali-section-badge mb-3">
-              Agenda Kegiatan
-            </div>
+            <div className="bali-section-badge mb-3">Agenda Kegiatan</div>
             <h2 className="text-3xl sm:text-4xl font-bold text-center">
               <span className="text-accent">Event </span>
               <span className="text-secondary">Kami</span>
             </h2>
             <div className="flex items-center gap-3 mt-4 w-32">
               <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-[var(--accent)]/50" />
-              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>✦</span>
+              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>
+                ✦
+              </span>
               <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-[var(--accent)]/50" />
             </div>
           </div>
@@ -172,17 +175,22 @@ export default function EventPage() {
             /* Premium Row layout (Image on the right, details on the left) */
             <div className="max-w-4xl mx-auto flex flex-col gap-8 px-4 pb-4 w-full">
               {visibleEvents.map((event) => (
-                <div 
+                <div
                   key={event.event_id}
-                  className="relative flex flex-col-reverse md:flex-row gap-6 md:gap-8 rounded-2xl border border-[var(--accent)]/20 bg-gradient-to-br from-[#14120e] to-[#0a0806] p-6 shadow-xl hover:border-[var(--accent)]/50 hover:shadow-[0_10px_25px_rgba(184,149,84,0.15)] transition-all duration-500 group w-full"
-                >
+                  className="relative flex flex-col-reverse md:flex-row gap-6 md:gap-8 rounded-2xl border border-[var(--accent)]/20 bg-gradient-to-br from-[#14120e] to-[#0a0806] p-6 shadow-xl hover:border-[var(--accent)]/50 hover:shadow-[0_10px_25px_rgba(184,149,84,0.15)] transition-all duration-500 group w-full">
                   {/* Left Side: Info, Snippet, and Detail Link */}
                   <div className="flex-grow flex flex-col justify-between gap-3 text-left">
                     <div className="flex flex-col gap-2.5">
                       <div className="flex items-center gap-2.5 text-xs text-[var(--accent)] font-semibold tracking-wider uppercase">
-                        <span>{event.jenis_proker_id === 1 ? "Program Utama" : "Kegiatan"}</span>
+                        <span>
+                          {event.jenis_proker_id === 1
+                            ? "Program Utama"
+                            : "Kegiatan"}
+                        </span>
                         <span className="w-1 h-1 rounded-full bg-[var(--accent)]/40" />
-                        <span className="text-[var(--secondary)]/60 normal-case font-normal">{formatDate(event.event_date)}</span>
+                        <span className="text-[var(--secondary)]/60 normal-case font-normal">
+                          {formatDate(event.event_date)}
+                        </span>
                       </div>
                       <h3 className="text-xl sm:text-2xl font-bold text-[var(--secondary)] group-hover:text-white transition-colors duration-300">
                         {event.nama_event}
@@ -191,12 +199,11 @@ export default function EventPage() {
                         {getSnippet(event.deskripsi_acara)}
                       </p>
                     </div>
-                    
+
                     <div className="pt-2">
-                      <a 
+                      <a
                         href={`/event/${event.event_id}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:text-[var(--accent-light)] transition-colors group/link"
-                      >
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:text-[var(--accent-light)] transition-colors group/link">
                         Selengkapnya
                         <FaChevronRight className="text-[10px] transform group-hover/link:translate-x-1 transition-transform" />
                       </a>
@@ -229,7 +236,10 @@ export default function EventPage() {
       </section>
 
       {/* Section Carousel Sponsor (CSS Marquee-based) */}
-      <section id="sponsor" className="py-20 relative overflow-hidden" style={{ background: "var(--primary)" }}>
+      <section
+        id="sponsor"
+        className="py-20 relative overflow-hidden"
+        style={{ background: "var(--primary)" }}>
         {/* CSS Keyframe definition for smooth infinite loop marquee */}
         <style>{`
           @keyframes marquee {
@@ -248,16 +258,16 @@ export default function EventPage() {
 
         <div className="flex flex-col items-center px-4">
           <div className="max-w-3xl mx-auto flex flex-col items-center mb-12">
-            <div className="bali-section-badge mb-3">
-              Kemitraan
-            </div>
+            <div className="bali-section-badge mb-3">Kemitraan</div>
             <h1 className="text-3xl sm:text-4xl font-bold text-center">
               <span className="text-accent">Sponsor </span>
               <span className="text-secondary">Kami</span>
             </h1>
             <div className="flex items-center gap-3 mt-4 w-32">
               <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-[var(--accent)]/50" />
-              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>✦</span>
+              <span style={{ color: "var(--accent)", fontSize: "0.8rem" }}>
+                ✦
+              </span>
               <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-[var(--accent)]/50" />
             </div>
           </div>
@@ -274,7 +284,9 @@ export default function EventPage() {
 
               <div className="animate-marquee-custom gap-8">
                 {getRepeatedSponsors().map((sponsor, index) => (
-                  <div key={`${sponsor.id_gallery}-${index}`} className="shrink-0 w-56">
+                  <div
+                    key={`${sponsor.id_gallery}-${index}`}
+                    className="shrink-0 w-56">
                     <SponsorCard
                       name={sponsor.nama_sponsor}
                       logoSrc={sponsor.media_url}

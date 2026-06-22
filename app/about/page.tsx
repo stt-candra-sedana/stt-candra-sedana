@@ -2,9 +2,9 @@ import Footer from "@/components/layout/footer";
 import Navbar from "@/components/layout/navbar";
 import OrganisasiSection from "@/components/layout/organisasi";
 import VisiMisiSection from "@/components/layout/visi_misi";
-import Button from "@/components/ui/button";
-import Card from "@/components/ui/card";
+
 import Image from "next/image";
+import { FaChevronDown } from "react-icons/fa6";
 
 export default function AboutSection() {
   return (
@@ -31,21 +31,16 @@ export default function AboutSection() {
             </p>
           </div>
 
-          <div>
-            <Button
-              variant="primary"
-              target="_blank"
-              rel="noreferrer noopener"
-              href="https://fonts.google.com/specimen/EB+Garamond">
-              Event
-            </Button>
-            <Button variant="border" className="ml-4" href="/contact">
-              Daftar
-            </Button>
-          </div>
+          <a
+            href="#tentang"
+            aria-label="Scroll ke bawah"
+            className="flex items-center justify-center w-12 h-12 rounded-full border transition hover:opacity-70 animate-bounce"
+            style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>
+            <FaChevronDown size={18} />
+          </a>
         </div>
       </section>
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section id="tentang" className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:items-center">
           <div className="w-full lg:w-1/2">
             <div className="mx-auto w-full max-w-xl overflow-hidden rounded-3xl shadow-[0_30px_80px_-40px_rgba(0,0,0,0.6)] sm:max-w-2xl">

@@ -24,7 +24,10 @@ export default function AdminStrukturPage() {
     setLoading(false);
   }, []);
 
-  function getSupabasePathFromUrl(url: string, bucketName: string = "images"): string | null {
+  function getSupabasePathFromUrl(
+    url: string,
+    bucketName: string = "images",
+  ): string | null {
     if (!url || !url.includes("/storage/v1/object/public/")) return null;
     try {
       const searchStr = `/storage/v1/object/public/${bucketName}/`;
@@ -47,7 +50,10 @@ export default function AdminStrukturPage() {
       .eq("id", id)
       .single();
 
-    const { error } = await supabase.from("struktur_organisasi").delete().eq("id", id);
+    const { error } = await supabase
+      .from("struktur_organisasi")
+      .delete()
+      .eq("id", id);
     if (error) {
       alert("Gagal menghapus pengurus: " + error.message);
       return;
@@ -65,6 +71,7 @@ export default function AdminStrukturPage() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStruktur();
   }, [fetchStruktur]);
 

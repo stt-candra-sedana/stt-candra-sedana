@@ -2,18 +2,38 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [waKetua, setWaKetua] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
-    // Run once on mount to set initial state
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    supabase
+      .from("struktur_organisasi")
+      .select("whatsapp")
+      .eq("jabatan_id", 6)
+      .single()
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Gagal fetch WA ketua:", error.message);
+          return;
+        }
+        if (data?.whatsapp) setWaKetua(data.whatsapp);
+      });
+  }, []);
+
+  const waLink = waKetua
+    ? `https://wa.me/62${waKetua.replace(/^0/, "")}`
+    : null;
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -23,10 +43,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/*
-       * Ketika scrolled: header menjadi fixed top + animate slide-down
-       * Ketika di atas (tidak scrolled): header tetap di flow normal (absolute/relative)
-       */}
       <header
         className="z-50 w-full transition-all duration-500"
         style={{
@@ -36,8 +52,7 @@ export default function Navbar() {
           right: 0,
           transform: scrolled ? "translateY(0)" : "translateY(0)",
           padding: scrolled ? "0.5rem 0" : "1rem 0",
-        }}
-      >
+        }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Main pill */}
           <div
@@ -55,8 +70,7 @@ export default function Navbar() {
                 ? "0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,149,84,0.06)"
                 : "none",
               padding: "0.875rem 1.25rem",
-            }}
-          >
+            }}>
             <div className="flex items-center justify-between md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4">
               {/* Mobile hamburger */}
               <button
@@ -64,8 +78,7 @@ export default function Navbar() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden transition"
                 style={{ color: "var(--accent)" }}
-                aria-label="Toggle navigation menu"
-              >
+                aria-label="Toggle navigation menu">
                 <svg
                   width="22"
                   height="22"
@@ -73,8 +86,7 @@ export default function Navbar() {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
-                  strokeLinecap="round"
-                >
+                  strokeLinecap="round">
                   {isMenuOpen ? (
                     <>
                       <line x1="4" y1="4" x2="18" y2="18" />
@@ -103,8 +115,7 @@ export default function Navbar() {
                     }
                     onMouseLeave={(e) =>
                       (e.currentTarget.style.color = "var(--secondary-muted)")
-                    }
-                  >
+                    }>
                     {link.label}
                   </Link>
                 ))}
@@ -113,43 +124,49 @@ export default function Navbar() {
               {/* Logo — center */}
               <Link
                 href="/"
-                className="justify-self-center flex flex-col items-center"
-              >
+                className="justify-self-center flex flex-col items-center">
                 <span
                   className="font-bold tracking-[0.18em] text-base leading-none"
-                  style={{ color: "var(--accent)", fontFamily: "var(--font-poppins)" }}
-                >
+                  style={{
+                    color: "var(--accent)",
+                    fontFamily: "var(--font-poppins)",
+                  }}>
                   CANDRA
                 </span>
                 <span
                   className="font-semibold tracking-[0.12em] text-xs leading-none mt-0.5"
-                  style={{ color: "rgba(232,224,208,0.7)", fontFamily: "var(--font-poppins)" }}
-                >
+                  style={{
+                    color: "rgba(232,224,208,0.7)",
+                    fontFamily: "var(--font-poppins)",
+                  }}>
                   SEDANA
                 </span>
               </Link>
 
               {/* CTA — right */}
               <div className="justify-self-end">
-                <Link
-                  id="navbar-kontak-btn"
-                  href="#kontak"
-                  className="text-sm font-semibold transition-all duration-200 rounded-xl"
-                  style={{
-                    color: "var(--primary)",
-                    background: "var(--accent)",
-                    padding: "0.5rem 1.25rem",
-                    letterSpacing: "0.08em",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "var(--accent-light)")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "var(--accent)")
-                  }
-                >
-                  Kontak
-                </Link>
+                {waLink && (
+                  <Link
+                    id="navbar-kontak-btn"
+                    href={waLink}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-sm font-semibold transition-all duration-200 rounded-xl"
+                    style={{
+                      color: "var(--primary)",
+                      background: "var(--accent)",
+                      padding: "0.5rem 1.25rem",
+                      letterSpacing: "0.08em",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.background = "var(--accent-light)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.background = "var(--accent)")
+                    }>
+                    Kontak
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -157,16 +174,14 @@ export default function Navbar() {
           {/* Mobile menu */}
           <div
             className="overflow-hidden transition-all duration-300 ease-in-out md:hidden"
-            style={{ maxHeight: isMenuOpen ? "200px" : "0px" }}
-          >
+            style={{ maxHeight: isMenuOpen ? "200px" : "0px" }}>
             <div
               className="mt-2 rounded-2xl"
               style={{
                 background: "rgba(10,8,6,0.95)",
                 backdropFilter: "blur(20px)",
                 border: "1px solid rgba(184,149,84,0.15)",
-              }}
-            >
+              }}>
               <nav className="flex flex-col gap-1 p-3">
                 {navLinks.map((link) => (
                   <Link
@@ -176,36 +191,37 @@ export default function Navbar() {
                     style={{ color: "var(--secondary)" }}
                     onClick={() => setIsMenuOpen(false)}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "rgba(184,149,84,0.08)";
+                      e.currentTarget.style.background =
+                        "rgba(184,149,84,0.08)";
                       e.currentTarget.style.color = "var(--accent)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = "transparent";
                       e.currentTarget.style.color = "var(--secondary)";
-                    }}
-                  >
+                    }}>
                     {link.label}
                   </Link>
                 ))}
-                <Link
-                  href="#kontak"
-                  className="mt-1 mx-1 rounded-xl px-4 py-3 text-sm font-semibold text-center transition"
-                  style={{ background: "var(--accent)", color: "var(--primary)" }}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Kontak
-                </Link>
+                {waLink && (
+                  <Link
+                    href={waLink}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="mt-1 mx-1 rounded-xl px-4 py-3 text-sm font-semibold text-center transition"
+                    style={{
+                      background: "var(--accent)",
+                      color: "var(--primary)",
+                    }}
+                    onClick={() => setIsMenuOpen(false)}>
+                    Kontak
+                  </Link>
+                )}
               </nav>
             </div>
           </div>
         </div>
       </header>
 
-      {/*
-       * Spacer hanya muncul saat navbar sudah fixed (scrolled),
-       * supaya konten di bawah navbar tidak terpotong.
-       * Tingginya disesuaikan dengan tinggi navbar saat scrolled (~64px).
-       */}
       {scrolled && <div style={{ height: "64px" }} aria-hidden="true" />}
     </>
   );
