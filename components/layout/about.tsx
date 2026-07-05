@@ -66,7 +66,7 @@ export default function AboutSection() {
                   "linear-gradient(135deg, rgba(184,149,84,0.05) 0%, transparent 60%)",
               }}
             />
-            <div className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-square shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden aspect-4/3 lg:aspect-square shadow-2xl">
               <Image
                 src="/image/Raja_Hidimba.jpg"
                 alt="STT Candra Sedana"
